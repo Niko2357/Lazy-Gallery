@@ -1,50 +1,41 @@
-document.addEventListener("DOMContentLoaded", function() {
-    var lazyloadImages;    
-  
-    if ("IntersectionObserver" in window) {
-      lazyloadImages = document.querySelectorAll(".lazy");
-      var imageObserver = new IntersectionObserver(function(entries, observer) {
-        entries.forEach(function(entry) {
-          if (entry.isIntersecting) {
-            var image = entry.target;
-            image.src = image.dataset.src;
-            image.classList.remove("lazy");
-            imageObserver.unobserve(image);
-          }
-        });
-      });
-  
-      lazyloadImages.forEach(function(image) {
-        imageObserver.observe(image);
-      });
-    } else {  
-      var lazyloadThrottleTimeout;
-      lazyloadImages = document.querySelectorAll(".lazy");
+
+const key = "Hm3MZEokux7NNW37NS9vKjTYZhqIYoRjzVB2YjbEe3yV9naP2pDm6Pd8";
+const url = "https://api.pexels.com/v1/search?query=nature&per_page=30";
+const columns = [document.getElementById("column1"), document.getElementById("column2"), document.getElementById("column3")];
+
+document.addEventListener("DOMContentLoaded", () => {
+    getImages();
+});
+
+async function getImages(){
+  const response = await fetch(url,  {
+    method: "GET",
+    headers:{
       
-      function lazyload () {
-        if(lazyloadThrottleTimeout) {
-          clearTimeout(lazyloadThrottleTimeout);
-        }    
-  
-        lazyloadThrottleTimeout = setTimeout(function() {
-          var scrollTop = window.pageYOffset;
-          lazyloadImages.forEach(function(img) {
-              if(img.offsetTop < (window.innerHeight + scrollTop)) {
-                img.src = img.dataset.src;
-                img.classList.remove('lazy');
-              }
-          });
-          if(lazyloadImages.length == 0) { 
-            document.removeEventListener("scroll", lazyload);
-            window.removeEventListener("resize", lazyload);
-            window.removeEventListener("orientationChange", lazyload);
-          }
-        }, 20);
-      }
-  
-      document.addEventListener("scroll", lazyload);
-      window.addEventListener("resize", lazyload);
-      window.addEventListener("orientationChange", lazyload);
-    }
-  })
-  
+      Authorization: key,
+    },
+  });
+  if(!response.ok){
+    throw new Error("Oh no, Marcelo. Pasta not aldente");
+  }
+  const data = await response.json();
+  displayImages(data.photos);
+}
+
+function displayImages(images) {
+  images.forEach((img, index) => {  
+    const pic = document.createElement("img");
+    pic.src = img.src.small;
+    pic.alt = "image";
+    pic.dataset.high = img.src.large;  
+    pic.addEventListener("mouseover", () => {
+      pic.src = pic.dataset.high;  
+    });
+
+    const column = columns[index % columns.length];
+    column.appendChild(pic);
+  });
+}
+
+
+
