@@ -12,12 +12,17 @@
 
 body{
     font-family: "artistic";
-    background: linear-gradient(0.25turn, #3f87a6, #ebf8e1, #f69d3c);
+    background: linear-gradient(0.25turn, #120336, #0b6d5b, #4e1551);
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     min-height: 100vh;
+}
+
+main{
+    width:80%;
+    justify-content: center;
 }
 
 .nav{
@@ -31,11 +36,15 @@ body{
     text-decoration: none;
 }
 
+#message{
+    justify-self: center;
+    font-size: 3rem;
+}
+
 .gallery{
     display: flex;
     gap: 20px;
     flex-wrap: wrap;
-    justify-content: center;
     max-width: 90%;
     width: 100%;
     padding: 20px;
